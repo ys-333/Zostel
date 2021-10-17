@@ -5,6 +5,7 @@ const Campground = require('./models/campground') ;
 const methodOverride = require('method-override') ;
 const ejsMate = require('ejs-mate') ;
 const catchAsync = require('./utils/catchAsync') ;
+const ExpressError = require('./utils/ExpressError') ;
 
 mongoose.connect('mongodb://localhost:27017/Hostel',{
     useNewUrlParser:true, // basically if we find bug in new url parser than we refer back to old url parser
@@ -55,7 +56,7 @@ app.get('/campground/new',(req,res)=>{
 
 app.post('/campground',catchAsync(async(req,res,next)=>{
     // res.send(req.body) ;
-    
+    if(!req.body.campground) throw new ExpressError('Validate Data',404) ;
     const campground = new Campground(req.body.campground) ;
     await campground.save() ;
     res.redirect(`/campground/${campground._id}`); 
@@ -94,11 +95,20 @@ app.delete('/campground/:id',catchAsync(async (req,res)=>{
     res.redirect(`/campground`) ;
 }))
 
-// middleware to handle error
-app.use((err,req,res,next)=>{
-    res.send("There is some sort of error") ;
+
+// If req that is made does not looKalike any url
+
+app.all('*',(req,res,next)=>{
+    next(new ExpressError('Page Not Found',404)) ;
 })
 
+// middleware to handle error
+
+app.use((err,req,res,next)=>{
+    const {statusCode=500} = err ;
+    if(!err.message) err.message = 'Something Went Wrong' ;
+    res.status(statusCode).render('error',{err}) ;
+})
 
 
 app.listen(3000, () => {
