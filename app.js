@@ -6,6 +6,8 @@ const methodOverride = require('method-override') ;
 const ejsMate = require('ejs-mate') ;
 const catchAsync = require('./utils/catchAsync') ;
 const ExpressError = require('./utils/ExpressError') ;
+//const Joi = require('Joi') ;
+const { campgroundSchema } = require('./schemas') ;
 
 mongoose.connect('mongodb://localhost:27017/Hostel',{
     useNewUrlParser:true, // basically if we find bug in new url parser than we refer back to old url parser
@@ -29,6 +31,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true})) ;// this is used so that req.body in post is not empty
 app.use(methodOverride('_method')) ;// as in from it support post and get,so to use put and delete we have to use method-override
 
+
+const validateCampground = (req,res,next)=>{
+    
+    //console.log(campgrondSchema) ;
+    const {error} = campgroundSchema.validate(req.body) ;
+    if(error){
+        const msg = error.details.map(el=>el.message).join(',') ;
+        throw new ExpressError(msg,400) ;
+    }
+    else{
+        next() ;
+    }
+}
 
 app.engine('ejs',ejsMate) ;
 
@@ -54,9 +69,9 @@ app.get('/campground/new',(req,res)=>{
     res.render('campground/new') ;
 })
 
-app.post('/campground',catchAsync(async(req,res,next)=>{
+app.post('/campground',validateCampground,catchAsync(async(req,res,next)=>{
     // res.send(req.body) ;
-    if(!req.body.campground) throw new ExpressError('Validate Data',404) ;
+    //if(!req.body.campground) throw new ExpressError('Validate Data',404) ;
     const campground = new Campground(req.body.campground) ;
     await campground.save() ;
     res.redirect(`/campground/${campground._id}`); 
