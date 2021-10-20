@@ -49,7 +49,7 @@ const validateCampground = (req,res,next)=>{
 }
 
 // validate review before supporting
-const validateSchema = (req,res,next)=>{
+const validateReview = (req,res,next)=>{
     const {error} = reviewSchema.validate(req.body) ;
     if(error){
         const msg = error.details.map(el=>el.message).join(',') ;
@@ -97,7 +97,7 @@ app.post('/campground',validateCampground,catchAsync(async(req,res,next)=>{
 //  TO SHOW THE PARTICULAR CAMP AND DETAIL RELATED TO IT.
 
 app.get('/campground/:id',catchAsync(async(req,res)=>{
-    const campground = await Campground.findById(req.params.id) ;
+    const campground = await Campground.findById(req.params.id).populate('reviews') ;
     res.render('campground/show',{campground}) ;
 }))
 
@@ -121,11 +121,13 @@ app.put('/campground/:id',catchAsync(async (req,res)=>{
 
 app.delete('/campground/:id',catchAsync(async (req,res)=>{
     const {id} = req.params ;
-    await Campground.findByIdAndDelete(id,{... req.body.campground}) ;
+    await Campground.findByIdAndDelete(id) ;
     res.redirect(`/campground`) ;
 }))
 
-app.post('/campground/:id/reviews',catchAsync(async(req,res)=>{
+// to add reviews
+
+app.post('/campground/:id/reviews',validateReview,catchAsync(async(req,res)=>{
     const campground = await Campground.findById(req.params.id) ;
     const review = new Review(req.body.review) ;
     campground.reviews.push(review) ;
@@ -136,8 +138,17 @@ app.post('/campground/:id/reviews',catchAsync(async(req,res)=>{
     res.redirect(`/campground/${campground._id}`) ;
 }))
 
+// To delete review
 
-// If req that is made does not looKalike any url
+app.delete('/campground/:id/review/:revId',catchAsync(async(req,res)=>{
+    const{id,revId} = req.params ;
+    await Campground.findByIdAndUpdate(id,{$pull:{reviews:revId}}) ; // to delete object id of reviews from campground
+    await Review.findByIdAndDelete(revId) ;
+    res.redirect(`/campground/${id}`) ;
+}))
+
+
+// If req that is made does not match any of route
 
 app.all('*',(req,res,next)=>{
     next(new ExpressError('Page Not Found',404)) ;
