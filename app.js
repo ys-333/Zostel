@@ -7,7 +7,9 @@ const ejsMate = require('ejs-mate') ;
 const catchAsync = require('./utils/catchAsync') ;
 const ExpressError = require('./utils/ExpressError') ;
 //const Joi = require('Joi') ;
-const { campgroundSchema } = require('./schemas') ;
+const { campgroundSchema,reviewSchema} = require('./schemas') ;
+const Review = require('./models/review');
+
 
 mongoose.connect('mongodb://localhost:27017/Hostel',{
     useNewUrlParser:true, // basically if we find bug in new url parser than we refer back to old url parser
@@ -31,6 +33,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true})) ;// this is used so that req.body in post is not empty
 app.use(methodOverride('_method')) ;// as in from it support post and get,so to use put and delete we have to use method-override
 
+// validdate campground before supporting
 
 const validateCampground = (req,res,next)=>{
     
@@ -39,6 +42,18 @@ const validateCampground = (req,res,next)=>{
     if(error){
         const msg = error.details.map(el=>el.message).join(',') ;
         throw new ExpressError(msg,400) ;
+    }
+    else{
+        next() ;
+    }
+}
+
+// validate review before supporting
+const validateSchema = (req,res,next)=>{
+    const {error} = reviewSchema.validate(req.body) ;
+    if(error){
+        const msg = error.details.map(el=>el.message).join(',') ;
+        throw new ExpressError(msg,404) ;
     }
     else{
         next() ;
@@ -108,6 +123,17 @@ app.delete('/campground/:id',catchAsync(async (req,res)=>{
     const {id} = req.params ;
     await Campground.findByIdAndDelete(id,{... req.body.campground}) ;
     res.redirect(`/campground`) ;
+}))
+
+app.post('/campground/:id/reviews',catchAsync(async(req,res)=>{
+    const campground = await Campground.findById(req.params.id) ;
+    const review = new Review(req.body.review) ;
+    campground.reviews.push(review) ;
+    await review.save() ;
+    await campground.save() ;
+    console.log(campground) ;
+    console.log(review) ;
+    res.redirect(`/campground/${campground._id}`) ;
 }))
 
 
