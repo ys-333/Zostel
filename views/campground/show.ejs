@@ -26,7 +26,7 @@
     </div>
     <div class="col-6">
       <h2>Leave A Review</h2>
-        <form action="/campground/<%=campground._id%>/reviews" method="post" novalidate class="mb-3 validation">
+        <form action="/campground/<%=campground._id%>/review" method="post" novalidate class="mb-3 validation">
           <div class="mb-3">
             <label for="rating" class="form-label" >Rating</label>
             <input type="range" class="form-range" name="review[rating]" min="1" max="5" id="rating" required>
