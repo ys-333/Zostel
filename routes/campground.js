@@ -39,6 +39,7 @@ router.post('/',validateCampground,catchAsync(async(req,res,next)=>{
     //if(!req.body.campground) throw new ExpressError('Validate Data',404) ;
     const campground = new Campground(req.body.campground) ;
     await campground.save() ;
+    req.flash('success','Successfully made a new campground') ;
     res.redirect(`/campground/${campground._id}`); 
     
   
@@ -48,17 +49,26 @@ router.post('/',validateCampground,catchAsync(async(req,res,next)=>{
 
 router.get('/:id',catchAsync(async(req,res)=>{
     const campground = await Campground.findById(req.params.id).populate('reviews') ;
+    if(!campground){
+        req.flash('error','Campground does not exist') ;
+        return res.redirect('/campground') ;
+    }
     res.render('campground/show',{campground}) ;
 }))
 
 // to edit the given camp using its id
 router.get('/:id/edit',catchAsync(async (req,res)=>{
     const campground = await Campground.findById(req.params.id) ;
+    if(!campground){
+        req.flash('error','Campground does not exist') ;
+        return res.redirect('/campground') ;
+    }
     res.render('campground/edit',{campground}) ;
 }))
 router.put('/:id',catchAsync(async (req,res)=>{
    const {id} = req.params ;
    const campground = await Campground.findByIdAndUpdate(id,{...req.body.campground}) ;
+   req.flash('success','Campground updated successfully!')
    res.redirect(`/campground/${campground._id}`) ;
 })) ;
 
@@ -72,6 +82,7 @@ router.put('/:id',catchAsync(async (req,res)=>{
 router.delete('/:id',catchAsync(async (req,res)=>{
     const {id} = req.params ;
     await Campground.findByIdAndDelete(id) ;
+    req.flash('success','Successfully deleted campground!') ;
     res.redirect(`/campground`) ;
 }))
 
