@@ -11,13 +11,18 @@ const { campgroundSchema,reviewSchema} = require('./schemas') ;
 const Review = require('./models/review');
 const session = require('express-session') ;
 const flash = require('connect-flash') ;
+const User = require('./models/user') ;
+const passport = require('passport') ;
+const LocalStrategy = require('passport-local') ;
 
 
 const app = express();
 
-const campground = require('./routes/campground') ;
-const review = require('./routes/review') ;
+const userRoutes = require('./routes/userAuth') ;
+const campgroundRoutes = require('./routes/campground') ;
+const reviewRoutes = require('./routes/review') ;
 const { date } = require('joi');
+
 
 
 
@@ -61,7 +66,19 @@ const sessinoInfo = {
 app.use(session(sessinoInfo)) ;
 app.use(flash()) ;
 
+app.use(passport.initialize()) ;
+app.use(passport.session()) ;
+passport.use(new LocalStrategy(User.authenticate())) ;
+
+passport.serializeUser(User.serializeUser()) ;
+passport.deserializeUser(User.deserializeUser()) ;
+
 app.use((req,res,next)=>{
+    if(!['/login','/'].includes(req.originalUrl)){
+        req.session.returnTo = req.originalUrl ;
+    }
+    console.log(req.session) ;
+    res.locals.user = req.user ;
     res.locals.success = req.flash('success') ;
     res.locals.error = req.flash('error') ;
     next() ;
@@ -69,8 +86,9 @@ app.use((req,res,next)=>{
 
 // Routes 
 
-app.use('/campground',campground) ;
-app.use('/campground/:id/review',review) ;
+app.use('/',userRoutes) ;
+app.use('/campground',campgroundRoutes) ;
+app.use('/campground/:id/review',reviewRoutes) ;
 
 
 
