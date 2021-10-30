@@ -5,6 +5,10 @@ const ExpressError = require('../utils/ExpressError') ;
 const { campgroundSchema} = require('../schemas') ;
 const Campground = require('../models/campground') ;
 const campground = require('../controllers/campground') ;
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
+
 
 const {isLoggedIn,validateCampground,isAuthor} = require('../middleware') ;
 
@@ -14,7 +18,11 @@ const {isLoggedIn,validateCampground,isAuthor} = require('../middleware') ;
 router.get('/',catchAsync(campground.index)) ;
 
 router.get('/new',isLoggedIn,campground.renderNewForm)
-router.post('/',isLoggedIn,validateCampground,catchAsync(campground.createCampground));
+//router.post('/',isLoggedIn,validateCampground,catchAsync(campground.createCampground));
+router.post('/',upload.single('image'),(req,res)=>{
+    console.log(req.body,req.file) ;
+    res.send('Hope everything works') ;
+})
 
 //  TO SHOW THE PARTICULAR CAMP AND DETAIL RELATED TO IT.
 
