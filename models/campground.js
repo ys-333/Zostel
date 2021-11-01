@@ -1,4 +1,5 @@
 //const { application } = require('express');
+const { string } = require('joi');
 const mongoose = require('mongoose') ;
 // const { campgroundSchema } = require('../schemas');
 const Review = require('./review') ;
@@ -7,7 +8,12 @@ const Schema = mongoose.Schema ;
 
 const CampgoundSChema = new Schema({
     title: String ,
-    image: String,
+    images:[
+        {
+            url:String,
+            filename:String
+        }
+    ],
     price: Number,
     description:String,
     location: String,
@@ -21,7 +27,7 @@ const CampgoundSChema = new Schema({
             ref:'Review' 
         }
     ]
-}) ;
+});
 
 /**
  * this is to ensure that when we delete campground all tweet associated with it shoudl be deleted

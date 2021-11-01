@@ -38,7 +38,17 @@ const seedDb = async()=>{
             author:'617b178b5a2ea1021c0b794e',
             location:`${cities[random1000].city},${cities[random1000].state}`,
             title: `${sample(descriptors)},${sample(places)}` ,
-             image:'https://source.unsplash.com/collection/483251',
+            images:[
+                {
+                  url: 'https://res.cloudinary.com/dpfwyw9yd/image/upload/v1635790656/Zostel/roneepophial7hvckiqy.jpg',
+                  filename: 'Zostel/roneepophial7hvckiqy',
+                 
+                },
+                {
+                  url: 'https://res.cloudinary.com/dpfwyw9yd/image/upload/v1635790665/Zostel/kri6cznxts73ayanap6n.jpg',
+                  filename: 'Zostel/kri6cznxts73ayanap6n',
+                }
+              ],
             //image:'https://images.unsplash.com/photo-1623966849598-dd847d702ea5?ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDh8NnNNVmpUTFNrZVF8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
             description:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo dicta, officiis voluptate incidunt libero vero dignissimos quis atque voluptatum quo enim quod nam, ab provident tempore a molestias facere quia.',
             price
