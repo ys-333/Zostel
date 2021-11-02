@@ -16,7 +16,7 @@
     <div class="row" >
         <h1 class="text-center">Edit Campground</h1>
         <div class="col-6 offset-3">
-            <form action="/campground/<%=campground._id%>?_method=PUT" method="POST" class="validation" novalidate>
+            <form action="/campground/<%=campground._id%>?_method=PUT" method="POST" class="validation" novalidate enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label" for="title">Title</label>
                     <input class="form-control" type="text" name="campground[title]" id="title" value="<%=campground.title%>" required>
@@ -31,13 +31,13 @@
                         Looks good!
                       </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label"  for="image">Image Url</label>
-                    <input class="form-control" type="text" name="campground[image]" id="image" value="<%=campground.image%>" required >
+                <!-- <div class="mb-3">
+                    <label class="form-label"  for="image"></label>
+                    <input class="" type="file" name="image" id="image" value="" required multiple>
                     <div class="valid-feedback">
                         Looks good!
                       </div>
-                </div>
+                </div> -->
                 <div class="mb-3">
                     <label class="form-label" for="price">CampgroundPrice</label>
                     <div class="input-group">
@@ -52,6 +52,11 @@
                 <div class="mb-3">
                     <label class="form-label"  for="description">Description</label>
                     <textarea class="form-control" type="text" name="campground[description]" id="location" required><%=campground.description%></textarea>
+                </div>
+                
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="inputGroupFile02" name="image" multiple >
+                    <label class="input-group-text" for="inputGroupFile02"></label>
                 </div>
                 
                 <div class="mb-3">

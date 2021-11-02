@@ -27,7 +27,7 @@ router.get('/:id',catchAsync(campground.showCampground))
 
 // to edit the given camp using its id
 router.get('/:id/edit',isLoggedIn,isAuthor,catchAsync(campground.renderEditForm))
-router.put('/:id',isLoggedIn,isAuthor,catchAsync(campground.updateCampground)) ;
+router.put('/:id',isLoggedIn,isAuthor,upload.array('image'),catchAsync(campground.updateCampground)) ;
 
 
 
