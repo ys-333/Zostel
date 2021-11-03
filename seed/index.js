@@ -31,7 +31,7 @@ const sample = array=> array[Math.floor(Math.random()*array.length)] ;
 
 const seedDb = async()=>{
     await camp.deleteMany({}) ;
-    for(let i=1;i<=50;i++){
+    for(let i=1;i<=200;i++){
         const random1000 = Math.floor(Math.random()*1000) ;
         const price = Math.floor(Math.random()*20)+10 ;
         const Camp = new camp({
@@ -40,7 +40,10 @@ const seedDb = async()=>{
             title: `${sample(descriptors)},${sample(places)}` ,
             geometry:{
                 type: 'Point', 
-                coordinates:[77.17222, 31.10333] 
+                coordinates:[
+                    cities[random1000].longitude,
+                    cities[random1000].latitude
+                ]
             },
             images:[
                 {
