@@ -38,6 +38,10 @@ const seedDb = async()=>{
             author:'617b178b5a2ea1021c0b794e',
             location:`${cities[random1000].city},${cities[random1000].state}`,
             title: `${sample(descriptors)},${sample(places)}` ,
+            geometry:{
+                type: 'Point', 
+                coordinates:[77.17222, 31.10333] 
+            },
             images:[
                 {
                   url: 'https://res.cloudinary.com/dpfwyw9yd/image/upload/v1635790656/Zostel/roneepophial7hvckiqy.jpg',

@@ -58,7 +58,15 @@
                     <input type="file" class="form-control" id="inputGroupFile02" name="image" multiple >
                     <label class="input-group-text" for="inputGroupFile02"></label>
                 </div>
-                
+                <div class="mb-3">
+                    <%campground.images.forEach(function(img,i){%>
+                        <img src="<%=img.thumbnail%>" class="img-thumbnail" alt="">
+                        <div class="form-check-inline">
+                           <input type="checkbox" name="deleteImages[]" id="image-<%=i%>" value="<%=img.filename%>">
+                        </div>
+                        <label for="image-<%=i%>">Delete</label>
+                    <%})%>
+                </div>
                 <div class="mb-3">
                     <button class="btn btn-danger ">Update Campground</button>
                 </div>
