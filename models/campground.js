@@ -14,6 +14,8 @@ ImageSchema.virtual('thumbnail').get(function(){
     return this.url.replace('/upload','/upload/w_200') ;
 })
 
+const opts = { toJSON: { virtuals: true } }; // to include virtuals in json object
+
 const CampgoundSChema = new Schema({
     title: String ,
     images:[ImageSchema],
@@ -41,7 +43,14 @@ const CampgoundSChema = new Schema({
             ref:'Review' 
         }
     ]
-});
+},opts);
+
+CampgoundSChema.virtual('properties.popUpmarkUp').get(function(){
+    return `
+    <strong><a href="/campground/${this._id}">${this.title}</a></strong>
+    <p>${this.description.substring(0,20)}...</p>
+    `
+})
 
 /**
  * this is to ensure that when we delete campground all tweet associated with it shoudl be deleted

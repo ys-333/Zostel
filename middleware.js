@@ -16,7 +16,7 @@ module.exports.isLoggedIn = (req,res,next)=>{
     next() ;
 }
 
-// campground middlware
+// campground middlware to validate
 
 module.exports.validateCampground = (req,res,next)=>{
     

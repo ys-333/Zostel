@@ -2,8 +2,8 @@ if(process.env.NODE_ENV!='production'){
     require('dotenv').config() ;
 }
 
-console.log(process.env.CLOUDINARY_API_KEY) ;
-console.log(process.env.CLOUDINARY_CLOUD_NAME) ;
+// console.log(process.env.CLOUDINARY_API_KEY) ;
+// console.log(process.env.CLOUDINARY_CLOUD_NAME) ;
 
 const express = require('express');
 const path = require('path');
@@ -21,7 +21,9 @@ const flash = require('connect-flash') ;
 const User = require('./models/user') ;
 const passport = require('passport') ;
 const LocalStrategy = require('passport-local') ;
-
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet') ;
+const MongoDBStore = require("connect-mongo");
 
 const app = express();
 
@@ -31,9 +33,9 @@ const reviewRoutes = require('./routes/review') ;
 const { date } = require('joi');
 
 
-
-
-mongoose.connect('mongodb://localhost:27017/Hostel',{
+//const dbUrl = process.env.DB_URL ; we need during production
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+mongoose.connect(dbUrl,{
     useNewUrlParser:true, // basically if we find bug in new url parser than we refer back to old url parser
     useUnifiedTopology:true,
     
@@ -56,21 +58,43 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true})) ;// this is used so that req.body in post is not empty
 app.use(methodOverride('_method')) ;// as in from it support post and get,so to use put and delete we have to use method-override
 app.use(express.static(path.join(__dirname,'public'))) ;
+app.use(mongoSanitize({
+    replaceWith:'_'
+}));
+
+app.use(helmet({
+    contentSecurityPolicy:false 
+})) ;
 
 //session configuration
+//const secret = process.env.SECRET ;
 
-const sessinoInfo = {
-    secret:'thisismysecret',
+
+// store.on("error", function (e) {
+//     console.log("SESSION STORE ERROR", e)
+// })
+const secret = process.env.SECRET || 'thisismysecret' ;
+
+const sessionConfig = {
+    store:MongoDBStore.create({ 
+        mongoUrl: dbUrl,
+        touchAfter: 24 * 60 * 60
+    }),
+    name: 'session',
+    secret,
     resave: false,
-    saveUninitialized:true,
-    cookie:{
-        httpOnly:true,
-        expires: Date.now() + 1000*60*60*24*7,
-        maxAge: 1000*60*60*24*7  
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        // secure: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
 
-app.use(session(sessinoInfo)) ;
+
+
+app.use(session(sessionConfig)) ;
 app.use(flash()) ;
 
 app.use(passport.initialize()) ;
@@ -81,6 +105,7 @@ passport.serializeUser(User.serializeUser()) ;
 passport.deserializeUser(User.deserializeUser()) ;
 
 app.use((req,res,next)=>{
+    console.log(req.query) ;
     if(!['/login','/'].includes(req.originalUrl)){
         req.session.returnTo = req.originalUrl ;
     }

@@ -1,8 +1,54 @@
-<% layout('layouts/boilerplate') -%>
-<div class="row">
-    <div class="col-6 offset-3 ">
-        <p class="h1 text-white-50 bg-dark d-flex justify-content: text-center">Welcome to Campground</p>
-        <img class="img-fluid max-width:100% " height="auto" src="https://images.unsplash.com/photo-1487730116645-74489c95b41b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Y2FtcGdyb3VuZHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80" alt="">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zostel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+        integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylesheets/home.css">
+</head>
+
+<body class="d-flex text-center text-white bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="mb-auto">
+            <div>
+                <h3 class="float-md-left mb-0">Zostel</h3>
+                <nav class="nav nav-masthead justify-content-center float-md-right">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link" href="/campground">Campgrounds</a>
+                    <% if(!user) { %>
+                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link" href="/register">Register</a>
+                    <% } else { %>
+                    <a class="nav-link" href="/logout">Logout</a>
+                    <% } %>
+                </nav>
+            </div>
+        </header>
+        <main class="px-3">
+            <h1>Zostel</h1>
+            <p class="lead"> Welcome to Zostel! <br> Jump right in and explore our many campgrounds. <br>
+                Feel free to share some of your own and comment on others!</p>
+            <a href="/campground" class="btn btn-lg btn-secondary font-weight-bold border-white bg-white">View
+                Campgrounds</a>
+        </main>
+
+        <footer class="mt-auto text-white-50">
+            <p>&copy;Zostel 2021 </p>
+        </footer>
+
+
     </div>
 
-</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+        integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

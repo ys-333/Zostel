@@ -47,12 +47,12 @@ const seedDb = async()=>{
             },
             images:[
                 {
-                  url: 'https://res.cloudinary.com/dpfwyw9yd/image/upload/v1635790656/Zostel/roneepophial7hvckiqy.jpg',
+                  url: 'https://res.cloudinary.com/dpfwyw9yd/image/upload/v1635927702/Zostel/omo44vjpwekana5nxpco.jpg',
                   filename: 'Zostel/roneepophial7hvckiqy',
                  
                 },
                 {
-                  url: 'https://res.cloudinary.com/dpfwyw9yd/image/upload/v1635790665/Zostel/kri6cznxts73ayanap6n.jpg',
+                  url: 'https://res.cloudinary.com/dpfwyw9yd/image/upload/v1635779448/Zostel/mngomt0qglkojf0nh1bk.jpg',
                   filename: 'Zostel/kri6cznxts73ayanap6n',
                 }
               ],
